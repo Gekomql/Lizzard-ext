@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lizard harness</title>
+    <link rel="stylesheet" href="/src/tools/lizard/lizard.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #0b0e1c;
+        color: #dfe6fb;
+        font: 13px/1.5 ui-sans-serif, system-ui, sans-serif;
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        min-height: 100vh;
+      }
+      nav { padding: 70px 18px 18px; border-right: 1px solid #222a49; }
+      nav a { display: block; padding: 7px 4px; color: #cfd8f5; text-decoration: none; }
+      main { padding: 70px 24px; max-width: 640px; }
+      h1 { font-size: 18px; margin: 0 0 4px; }
+      p { color: #93a0c6; }
+      #state { font: 11px ui-monospace, monospace; color: #c2a470; white-space: pre; }
+    </style>
+  </head>
+  <body>
+    <!--
+      A development harness, not part of the extension. It stubs the two chrome
+      APIs the tool touches so the animal can be watched in an ordinary tab,
+      served over http, without loading anything unpacked.
+    -->
+    <nav data-critter-rail>
+      <a href="#">Home</a>
+      <a href="#">Inbox</a>
+      <a href="#">My work</a>
+      <a href="#">Issues</a>
+      <a href="#">Projects</a>
+      <a href="#">Milestones</a>
+      <a href="#">Agents</a>
+      <a href="#">Activity</a>
+      <a href="#">Settings</a>
+      <a href="#">Archive</a>
+    </nav>
+    <main>
+      <h1>Lizard harness</h1>
+      <p>The animal below is the real one, mounted the way the content script mounts it.</p>
+      <div id="state">waiting for the first frame</div>
+    </main>
+
+    <script>
+      // Only what the tool actually calls.
+      window.chrome = {
+        runtime: { getURL: (p) => "/" + p },
+        storage: {
+          sync: {
+            get: async (defaults) => ({ ...defaults, debug: true, name: "Giorgi" }),
+            set: async () => {},
+          },
+          onChanged: { addListener() {}, removeListener() {} },
+        },
+      };
+    </script>
+    <script type="module">
+      import * as lizard from "/src/tools/lizard/index.js";
+      // `?shadow=0` exercises the light-DOM path the popup uses.
+      const shadow = new URLSearchParams(location.search).get("shadow") !== "0";
+      if (!shadow) document.body.classList.add("lz-scope");
+      await lizard.mount({ shadow });
+      const out = document.getElementById("state");
+      setInterval(() => {
+        out.textContent = JSON.stringify(window.__critter ?? {}, null, 1);
+      }, 300);
+    </script>
+  </body>
+</html>

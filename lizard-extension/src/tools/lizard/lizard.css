@@ -1,0 +1,113 @@
+/*
+ * The lizard's own furniture. Copied out of Lumen's `globals.css`, lines
+ * 2523-2617, with one change: the four colour variables it used to inherit from
+ * the app are declared here instead.
+ *
+ * In the content script this whole sheet is loaded into a shadow root, so no
+ * rule here can reach a page and no page rule can reach in. That is the only
+ * way a thing that draws itself over every site on the web stays polite.
+ */
+
+.lz-scope {
+  /* Lumen's workspace palette, pinned. The bubble is deliberately the app's own
+     furniture rather than a cartoon balloon: the joke is that a real animal has
+     got into a serious tool, and a speech balloon would tell it twice. */
+  --w-bg: #070a16;
+  --w-panel: rgba(20, 27, 54, 0.62);
+  --w-border: rgba(133, 156, 224, 0.18);
+  --w-text: #e8ecfb;
+
+  font-family:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/*
+ * It lives over the page rather than in it, and is never interactive: the layer
+ * takes no pointer events at all, so everything it walks over stays clickable
+ * straight through it. It watches the cursor by listening on the window
+ * instead, which is also how it knows to run away.
+ */
+.critter-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+  /* A hair of shadow under the whole animal, so it sits on the glass rather
+     than floating a layer above it. */
+  filter: drop-shadow(0 1px 1px rgba(4, 6, 15, 0.45));
+}
+
+.critter-svg {
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
+
+/* What it is thinking. */
+.critter-think {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 244px;
+  margin: 0;
+  border: 1px solid var(--w-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--w-bg) 82%, var(--w-panel));
+  backdrop-filter: blur(10px) brightness(0.82);
+  -webkit-backdrop-filter: blur(10px) brightness(0.82);
+  padding: 7px 9px;
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-align: left;
+  color: var(--w-text);
+  box-shadow: 0 8px 24px rgba(3, 5, 12, 0.45);
+  opacity: 0;
+  transition:
+    opacity 220ms ease,
+    translate 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  translate: 0 4px;
+}
+
+.critter-think[data-open="true"] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* The two trailing dots that make it a thought rather than speech. */
+.critter-think::before,
+.critter-think::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--w-bg) 82%, var(--w-panel));
+  border: 1px solid var(--w-border);
+}
+
+.critter-think::before {
+  bottom: -7px;
+  left: 14px;
+  height: 7px;
+  width: 7px;
+}
+
+.critter-think::after {
+  bottom: -14px;
+  left: 7px;
+  height: 4px;
+  width: 4px;
+}
+
+/* Sitting under the animal instead of over it, near the top of the screen.
+   The dots move to the other edge so they still point at the thinker. */
+.critter-think[data-below="true"]::before {
+  bottom: auto;
+  top: -7px;
+}
+
+.critter-think[data-below="true"]::after {
+  bottom: auto;
+  top: -14px;
+}

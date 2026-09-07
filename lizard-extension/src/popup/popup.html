@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lizard</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../tools/lizard/lizard.css" />
+  </head>
+  <body class="lz-scope">
+    <header class="head">
+      <h1>Lizard</h1>
+      <p class="sub" id="where">Checking this tab</p>
+    </header>
+
+    <!-- `data-critter-rail` is how the animal finds words to walk on. It is the
+         same attribute Lumen puts on its sidebar, so the preview below behaves
+         exactly the way it does on a real page. -->
+    <main class="panel" data-critter-rail>
+      <label class="row switch">
+        <span class="label">Lizard</span>
+        <input type="checkbox" id="enabled" />
+      </label>
+
+      <label class="row switch">
+        <span class="label">Allow on this site</span>
+        <input type="checkbox" id="site" />
+      </label>
+
+      <label class="row">
+        <span class="label">Your name</span>
+        <input type="text" id="name" placeholder="you" maxlength="24" autocomplete="off" />
+      </label>
+
+      <label class="row switch">
+        <span class="label">Let it talk</span>
+        <input type="checkbox" id="thoughts" />
+      </label>
+      <p class="note">
+        Off is strictly the animal: no bubble, no text. It still walks, hunts
+        and burrows.
+      </p>
+
+      <label class="row switch">
+        <span class="label">Debug timing</span>
+        <input type="checkbox" id="debug" />
+      </label>
+      <p class="note">
+        Debug makes burrowing, hunting and nagging happen in seconds instead of
+        minutes, and publishes the state machine on <code>window.__critter</code>.
+        It changes timing, never behaviour.
+      </p>
+
+      <details id="work">
+        <summary>Tell it about your work</summary>
+        <p class="note">
+          It never invents a number. Until you fill these in it will not say a
+          single line that quotes a count, because there is nothing here for it
+          to read. Whatever you type is what it will quote, exactly.
+        </p>
+        <label class="row"><span class="label">Open issues</span><input type="number" id="openTasks" min="0" max="999" /></label>
+        <label class="row"><span class="label">Inbox</span><input type="number" id="inbox" min="0" max="999" /></label>
+        <label class="row"><span class="label">Agents</span><input type="number" id="agents" min="0" max="999" /></label>
+        <label class="row"><span class="label">Saved views</span><input type="number" id="views" min="0" max="999" /></label>
+        <label class="row"><span class="label">Projects</span><input type="text" id="projects" placeholder="Lumen, Hearth" autocomplete="off" /></label>
+        <button type="button" id="forget" class="forget">Forget all of it</button>
+      </details>
+    </main>
+
+    <footer class="foot">
+      <span>It is walking on this panel right now.</span>
+    </footer>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
